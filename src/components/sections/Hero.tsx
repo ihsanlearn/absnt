@@ -77,7 +77,7 @@ export default function Hero() {
           className="text-base lg:text-xl text-muted-foreground max-w-lg mx-auto lg:mx-0 leading-relaxed font-light"
         >
           &quot;Hidup itu pahit? Kopiin aja dulu.&quot; <br/>
-          Racikan kopi pinggiran rasa bintang lima. Harga mahasiswa, rasa pejabat.
+          Secangkir jeda di tengah hari yang ramai. Rasa luar biasa, harga tetap bersahabat.
         </motion.p>
 
         <motion.div
