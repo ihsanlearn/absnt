@@ -23,7 +23,7 @@ const products: Product[] = [
   {
     id: "c1",
     name: "Americano",
-    price: "15K",
+    price: "10K",
     desc: "Espresso murni dengan tambahan air. Pahit nikmat bikin melek.",
     tag: null,
     image: "/absnt/americano-nobg.png",
@@ -32,7 +32,7 @@ const products: Product[] = [
   {
     id: "c2",
     name: "Kopi Gula Aren",
-    price: "18K",
+    price: "12K",
     desc: "Signature Absnt. Manis legit gula aren asli, bukan kaleng-kaleng.",
     tag: "Best Seller",
     image: "/absnt/gulaaren-nobg.png",
@@ -41,7 +41,7 @@ const products: Product[] = [
   {
     id: "c3",
     name: "Butterscotch Latte",
-    price: "22K",
+    price: "12K",
     desc: "Rasa buttery toffee yang unik. Creamy dan nagih banget.",
     tag: "Must Try",
     image: "/absnt/butterscotch-nobg.png",
@@ -50,7 +50,7 @@ const products: Product[] = [
   {
     id: "c4",
     name: "Hazelnut Latte",
-    price: "20K",
+    price: "12K",
     desc: "Aroma kacang hazelnut yang wangi berpadu sama kopi susu.",
     tag: null,
     image: "/absnt/hazlenut-nobg.png",
@@ -58,8 +58,8 @@ const products: Product[] = [
   },
   {
     id: "c5",
-    name: "Caffe Latte",
-    price: "18K",
+    name: "Latte",
+    price: "12K",
     desc: "Keseimbangan pas antara espresso dan susu steamed.",
     tag: null,
     image: "/absnt/late-nobg.png",
@@ -67,8 +67,8 @@ const products: Product[] = [
   },
   {
     id: "c6",
-    name: "Tiramisu Latte",
-    price: "22K",
+    name: "Tiramisu",
+    price: "12K",
     desc: "Sensasi dessert tiramisu dalam seglas kopi. Mewah.",
     tag: null,
     image: "/absnt/tiramisu-nobg.png",
@@ -76,8 +76,8 @@ const products: Product[] = [
   },
   {
     id: "c7",
-    name: "Kopi Regal",
-    price: "20K",
+    name: "Regal",
+    price: "14K",
     desc: "Kopi susu creamy dengan remah biskuit Regal yang nostalgic.",
     tag: "Favorite",
     image: "/absnt/regal-nobg.png",
@@ -85,8 +85,8 @@ const products: Product[] = [
   },
   {
     id: "c8",
-    name: "Dirty Matcha",
-    price: "24K",
+    name: "Derty Matcha",
+    price: "15K",
     desc: "Matcha premium ditabrak espresso. Unik, strong, dan creamy.",
     tag: "New",
     image: "/absnt/dertymatcha-nobg.png",
@@ -96,8 +96,8 @@ const products: Product[] = [
   // NON-COFFEE
   {
     id: "nc1",
-    name: "Matcha Latte",
-    price: "20K",
+    name: "Matcha",
+    price: "15K",
     desc: "Full matcha premium tanpa kopi. Smooth dan calming.",
     tag: "Best Seller",
     image: "/absnt/matcha-nobg.png",
@@ -106,7 +106,7 @@ const products: Product[] = [
   {
     id: "nc2",
     name: "Sweet Oreo",
-    price: "18K",
+    price: "15K",
     desc: "Susu creamy shake dengan oreo crumbs melimpah.",
     tag: "Kids Fav",
     image: "/absnt/sweetoreo-nobg.png",
