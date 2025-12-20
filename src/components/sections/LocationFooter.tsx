@@ -37,7 +37,7 @@ export default function LocationFooter() {
             viewport={{ once: true }}
           >
             <h2 className="text-3xl lg:text-4xl font-bold text-background mb-2">Mampir Sini,</h2>
-            <h2 className="text-3xl lg:text-4xl font-bold text-muted-foreground">Kita Ngopi Bareng.</h2>
+            <h2 className="text-3xl lg:text-4xl font-bold text-muted-foreground">Ngopi Bareng Temen.</h2>
           </motion.div>
           
           <p className="text-muted-foreground text-base lg:text-lg leading-relaxed">

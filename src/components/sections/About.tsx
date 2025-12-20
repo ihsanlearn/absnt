@@ -38,17 +38,17 @@ export default function About() {
            className="space-y-4 max-w-2xl mx-auto"
         >
             <h2 className="text-3xl lg:text-4xl font-light tracking-tight">
-               <span className="font-bold text-accent block mb-2">FOKUS TANPA BATAS.</span>
-               Rasa "Pejabat", Harga Mahasiswa. <br className="hidden lg:block"/>Tanpa Basa-basi.
+               <span className="font-bold text-accent font-(family-name:--font-lobster) block mb-5">Ruang Obrolan Santai.</span>
+               Rasa Terjaga, Harga Ramah Mahasiswa
             </h2>
             <p className="text-muted-foreground/80 text-lg">
-                Singkirkan distraksi, nikmati esensi. Kopi enak gak harus bikin dompet teriak.
+                Singkirkan distraksi, nikmati esensi. Kopi harian untuk pikiran yang ingin tetap jalan.
             </p>
         </motion.div>
       </div>
 
       {/* Elegant Infinite Marquee / Gallery */}
-      <div className="relative w-full overflow-hidden py-10">
+      <div className="relative w-full overflow-hidden py-8">
          {/* Gradient Masks */}
          <div className="absolute left-0 top-0 bottom-0 w-20 lg:w-40 z-10 bg-linear-to-r from-foreground to-transparent pointer-events-none" />
          <div className="absolute right-0 top-0 bottom-0 w-20 lg:w-40 z-10 bg-linear-to-l from-foreground to-transparent pointer-events-none" />

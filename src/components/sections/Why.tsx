@@ -22,8 +22,8 @@ const features = [
   },
   {
     icon: Heart,
-    title: "Racikan Orang Dalem",
-    desc: "Dibuat penuh cinta (dan sedikit curhatan) biar lo semangat lagi.",
+    title: "Cocok untuk Sehari-hari",
+    desc: "Minuman yang enak dinikmati kapan saja, tanpa mikir harga.",
   },
 ]
 

@@ -126,10 +126,10 @@ export default function Menu() {
 
       <div className="mb-12 text-center space-y-4">
         <h2 className="text-3xl lg:text-6xl font-(family-name:--font-lobster) text-foreground">
-            Pasti <span className="text-primary">Ada Rasa.</span>
+            Untuk <span className="text-primary">Setiap Jeda.</span>
         </h2>
         <p className="text-muted-foreground text-base lg:text-lg max-w-xl mx-auto">
-            Dipilih dari biji dan daun terbaik, diracik dengan sepenuh hati buat nemenin hari-hari lo.
+            Dirancang untuk nemenin belajar, ngobrol, dan istirahat sebentar.
         </p>
 
         {/* Custom Tabs */}
