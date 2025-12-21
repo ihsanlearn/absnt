@@ -1,6 +1,7 @@
 
 "use client"
 
+import { useState, useEffect } from "react"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { motion } from "framer-motion"
@@ -26,6 +27,29 @@ function TikTok({ className }: { className?: string }) {
 }
 
 export default function LocationFooter() {
+  const [isOpen, setIsOpen] = useState(false)
+
+  useEffect(() => {
+    const checkStatus = () => {
+      const now = new Date()
+      // Use toLocaleString to get local time in a consistent way if needed, 
+      // but for client-side simple check, getHours() of the local system is usually what's expected for "am I open right now here".
+      // Ideally we would check timezone "Asia/Jakarta" but system time is a good proxy for a local user.
+      const hour = now.getHours()
+      
+      // Open 17:00 - 22:00
+      if (hour >= 17 && hour < 22) {
+        setIsOpen(true)
+      } else {
+        setIsOpen(false)
+      }
+    }
+
+    checkStatus()
+    // Update every minute
+    const interval = setInterval(checkStatus, 60000)
+    return () => clearInterval(interval)
+  }, [])
   return (
     <footer id="location" className="bg-foreground text-card pt-16 lg:pt-24 pb-8 lg:pb-12 px-4 lg:px-20 rounded-t-[30px] lg:rounded-t-[50px] relative z-10">
       <div className="flex flex-col lg:flex-row justify-between gap-12 mb-20">
@@ -74,14 +98,32 @@ export default function LocationFooter() {
                 className="absolute inset-0 w-full h-full"
               />
             </div>
-             <div className="absolute bottom-2 left-2 right-2 bg-foreground/90 backdrop-blur-sm p-4 rounded-xl border border-border">
-                <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center text-primary">
-                        <MapPin className="w-5 h-5" />
+            <div className="absolute bottom-2 left-2 right-2 bg-foreground/90 backdrop-blur-sm p-4 rounded-xl border border-border">
+                <div className="flex items-center justify-between gap-3">
+                    <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center text-primary">
+                            <MapPin className="w-5 h-5" />
+                        </div>
+                        <div>
+                            <p className="font-bold text-background text-sm">Absnt Coffee</p>
+                            <p className="text-muted-foreground text-xs">Jl. Brig Katamso NO.11, Madusari</p>
+                        </div>
                     </div>
-                    <div>
-                        <p className="font-bold text-background text-sm">Absnt Coffee</p>
-                        <p className="text-muted-foreground text-xs">Jl. Brig Katamso NO.11, Madusari, Wonosari (Depan Bank BPD Wonosari)</p>
+                    
+                    {/* Status Badge */}
+                    <div className={`px-3 py-1.5 rounded-full flex items-center gap-2 border ${
+                        isOpen 
+                        ? "bg-green-500/10 border-green-500/20 text-green-500" 
+                        : "bg-red-500/10 border-red-500/20 text-red-500"
+                    }`}>
+                        <span className={`relative flex h-2 w-2`}>
+                          <span className={`${isOpen ? 'animate-ping' : ''} absolute inline-flex h-full w-full rounded-full opacity-75 ${isOpen ? 'bg-green-500' : 'bg-red-500'}`}></span>
+                          <span className={`relative inline-flex rounded-full h-2 w-2 ${isOpen ? 'bg-green-500' : 'bg-red-500'}`}></span>
+                        </span>
+                        <div className="flex flex-col">
+                            <span className="text-[10px] font-bold uppercase leading-none">{isOpen ? "Buka" : "Tutup"}</span>
+                            <span className="text-[10px] opacity-80 leading-none mt-0.5">{isOpen ? "Sampai 22:00" : "Buka 17:00"}</span>
+                        </div>
                     </div>
                 </div>
             </div>
