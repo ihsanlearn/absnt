@@ -120,7 +120,7 @@ export default function Menu() {
   const filteredProducts = products.filter(product => product.category === activeTab)
 
   return (
-    <section id="menu" className="py-16 lg:py-24 px-4 lg:px-20 bg-muted/30 relative overflow-hidden" id="menu">
+    <section id="menu" className="py-16 lg:py-24 px-4 lg:px-20 bg-muted/30 relative overflow-hidden">
        {/* Background accent */}
        <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-primary/5 rounded-full blur-3xl -z-10 translate-x-1/2 -translate-y-1/2" />
 
