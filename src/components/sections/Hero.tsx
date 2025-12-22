@@ -86,9 +86,9 @@ export default function Hero() {
           transition={{ duration: 0.8, delay: 0.4 }}
           className="flex flex-col sm:flex-row justify-center lg:justify-start gap-4 pt-4"
         >
-          <Button size="lg" className="rounded-full text-lg px-8 h-14 shadow-xl shadow-primary/25 hover:shadow-primary/40 transition-all hover:-translate-y-1">
+          <Link href="#menu" className="rounded-full text-lg px-8 h-14 shadow-xl shadow-primary/25 hover:shadow-primary/40 transition-all hover:-translate-y-1">
             Lihat Menu <ArrowRight className="ml-2 w-5 h-5" />
-          </Button>
+          </Link>
           <Link href="#location" className="rounded-full flex items-center justify-center text-lg px-8 h-14 border hover:bg-background/80 hover:text-primary transition-colors">
             Belii <MapPin className="ml-2 w-5 h-5" />
           </Link>
