@@ -74,7 +74,7 @@ export default function About() {
                         />
                         {/* Optional Minimal Label on Hover */}
                         <div className="absolute bottom-6 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                           <span className="text-xs font-bold tracking-widest uppercase text-accent">Discover</span>
+                           <span className="text-xs font-bold tracking-widest uppercase text-accent">Jelajahi</span>
                         </div>
                      </div>
                  </motion.div>
