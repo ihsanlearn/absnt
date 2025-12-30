@@ -29,7 +29,7 @@ export default async function Home() {
       
       <Hero user={user} />
       <About />
-      <Menu products={products} />
+      <Menu products={products} user={user} />
       <Why />
       <LocationFooter />
     </main>

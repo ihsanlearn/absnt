@@ -9,6 +9,8 @@ import { Plus, Minus } from "lucide-react"
 import Image from "next/image"
 import { useCart } from "@/context/cart-context"
 import { Loader2 } from "lucide-react"
+import { User } from "@supabase/supabase-js"
+import { useRouter } from "next/navigation"
 
 export type Product = {
   id: string
@@ -22,15 +24,22 @@ export type Product = {
 
 interface MenuProps {
   products: Product[]
+  user: User | null
 }
 
-export default function Menu({ products }: MenuProps) {
+export default function Menu({ products, user }: MenuProps) {
   const [activeTab, setActiveTab] = useState<"coffee" | "non coffee">("coffee")
   const { items, addItem, updateQuantity } = useCart()
+  const router = useRouter()
 
   const filteredProducts = products.filter(product => product.category === activeTab)
   
   function handleAddToCart(product: Product) {
+     if (!user) {
+        router.push('/login')
+        return
+     }
+
      const numericPrice = parseInt(product.price.replace(/[^0-9]/g, ''))
      
      addItem({
