@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { initAdmin } from "@/lib/firebase-admin";
 import { getMessaging } from "firebase-admin/messaging";
-import { createClient } from "@/lib/supabase/server";
+import { createServiceClient } from "@/lib/supabase/service";
 
 export async function POST(req: NextRequest) {
     try {
@@ -20,7 +20,7 @@ export async function POST(req: NextRequest) {
         const messaging = getMessaging(app);
 
         // 2. Fetch all Admin User IDs
-        const supabase = await createClient();
+        const supabase = createServiceClient();
         
         const { data: adminRoles, error: roleError } = await supabase
             .from('customers')
