@@ -13,6 +13,10 @@
 # testing
 /coverage
 
+/firebase.ts
+/absnt-coffee-firebase-adminsdk-fbsvc-f1743cef7a.json
+/vapid.ts
+
 # next.js
 /.next/
 /out/
@@ -23,6 +27,7 @@
 # misc
 .DS_Store
 *.pem
+*.sql
 
 # debug
 npm-debug.log*

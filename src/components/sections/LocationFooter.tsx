@@ -37,8 +37,8 @@ export default function LocationFooter() {
       // Ideally we would check timezone "Asia/Jakarta" but system time is a good proxy for a local user.
       const hour = now.getHours()
       
-      // Open 17:00 - 22:00
-      if (hour >= 17 && hour < 22) {
+      // Open 18:00 - 23:00
+      if (hour >= 18 && hour < 23) {
         setIsOpen(true)
       } else {
         setIsOpen(false)
@@ -133,9 +133,9 @@ export default function LocationFooter() {
       <div className="border-t border-border pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-muted-foreground text-sm">
         <p>&copy; {new Date().getFullYear()} Absnt Coffee. All rights reserved.</p>
         <div className="flex gap-6">
-            <a href="#" className="hover:text-background transition-colors">Privacy</a>
-            <a href="#" className="hover:text-background transition-colors">Terms</a>
-            <a href="#" className="hover:text-background transition-colors">Contact</a>
+            <a href="#" className="hover:text-background transition-colors">Privasi</a>
+            <a href="#" className="hover:text-background transition-colors">Syarat & Ketentuan</a>
+            <a href="#" className="hover:text-background transition-colors">Kontak</a>
         </div>
       </div>
     </footer>

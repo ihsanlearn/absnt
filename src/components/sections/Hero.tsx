@@ -2,13 +2,33 @@
 
 import { Button } from "@/components/ui/button"
 import { motion } from "framer-motion"
-import { ArrowRight, MapPin, Coffee, Droplets } from "lucide-react"
+import { ArrowRight, MapPin, Coffee, Droplets, User as UserIcon, LogOut } from "lucide-react"
 import Image from "next/image"
 import Link from "next/link"
+import { type User } from "@supabase/supabase-js"
+import { logout } from "@/app/auth/actions"
+import UserMenu from "@/components/ui/user-menu"
 
-export default function Hero() {
+interface HeroProps {
+  user: User | null
+}
+
+export default function Hero({ user }: HeroProps) {
   return (
     <section className="min-h-screen flex flex-col lg:flex-row items-center justify-center p-4 lg:p-20 relative overflow-hidden bg-background">
+      {/* Auth Buttons */}
+      <div className="absolute top-6 right-6 z-50 flex items-center gap-4">
+        {user ? (
+          <UserMenu user={user} />
+        ) : (
+          <Link href="/login">
+            <Button className="rounded-full px-6 font-bold shadow-lg shadow-primary/20 hover:shadow-primary/40 transition-all hover:-translate-y-0.5">
+              Masuk
+            </Button>
+          </Link>
+        )}
+      </div>
+
       {/* Decorative Background Elements */}
       <div className="absolute top-0 right-0 w-full h-1/2 lg:w-3/5 lg:h-full bg-secondary/15 rounded-bl-[150px] -z-10" />
       <div className="absolute top-20 left-10 w-24 h-24 bg-primary/5 rounded-full blur-2xl -z-10" />
@@ -55,10 +75,10 @@ export default function Hero() {
               className="rounded-full shadow-md object-cover ring-2 ring-primary/20"
             />
             <span className="py-1 px-4 rounded-full bg-primary/10 text-primary text-md font-bold tracking-wide border border-primary/20">
-              EST. 2024 • Coffee
+              EST. 2024 • Kopi
             </span>
           </div>
-          <h1 className="text-5xl lg:text-8xl font-(family-name:--font-lobster) text-foreground leading-[1] drop-shadow-sm">
+          <h1 className="text-5xl lg:text-8xl font-(family-name:--font-lobster) text-foreground leading-none drop-shadow-sm">
             Ngopi Enak,<br />
             <span className="text-primary relative">
               Ga Ribet.
@@ -151,7 +171,7 @@ export default function Hero() {
                 transition={{ delay: 1, type: "spring" }}
                 className="absolute -top-7 -right-1 md:-top-6 md:-right-6 z-40 bg-yellow-400 text-black font-black p-3 mdp-4 rounded-full w-24 h-24 flex items-center justify-center text-center md:text-xs shadow-lg rotate-12"
               >
-                 BEST SELLER
+                 TERLARIS
               </motion.div>
            </div>
         </motion.div>

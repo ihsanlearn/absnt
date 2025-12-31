@@ -8,12 +8,12 @@ const features = [
   {
     icon: Coffee,
     title: "Ga Ada Obat",
-    desc: "Bukan kopi sachet-an. Rasanya bikin lo lupa sama masalah hidup bentar.",
+    desc: "Bukan kopi sachet-an. Rasanya bikin kamu lupa sama masalah hidup bentar.",
   },
   {
     icon: DollarSign,
     title: "Harga Mahasiswa",
-    desc: "Mulai dari 12rb, lo udah bisa dapet kopi enak. Dompet aman, caffeine fix dapet.",
+    desc: "Mulai dari 12rb, kamu udah bisa dapet kopi enak. Dompet aman, caffeine fix dapet.",
   },
   {
     icon: BatteryCharging,
@@ -35,7 +35,7 @@ export default function Why() {
       <div className="max-w-6xl mx-auto relative z-10">
         <div className="text-center mb-16 space-y-4">
           <h2 className="text-4xl lg:text-5xl font-bold text-foreground">Kenapa Absnt?</h2>
-          <p className="text-muted-foreground">Alasan kenapa lo harus mampir ke lapak kami.</p>
+          <p className="text-muted-foreground">Alasan kenapa kamu wajib mampir ke lapak kami.</p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
