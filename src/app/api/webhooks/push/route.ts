@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { initAdmin } from "@/lib/firebase-admin";
+import { getMessaging } from "firebase-admin/messaging";
 import { createClient } from "@/lib/supabase/server";
 
 export async function POST(req: NextRequest) {
@@ -15,22 +16,15 @@ export async function POST(req: NextRequest) {
         const orderId = record.id;
         const customerName = record.customer_name || 'Pelanggan';
 
-        // 1. Init Firebase Admin
-        const admin = await initAdmin();
+        const app = await initAdmin();
+        const messaging = getMessaging(app);
 
         // 2. Fetch all Admin User IDs
-        // Assuming we want to notify ALL admins. 
-        // We need to know who is admin. We can check `user_roles` table.
         const supabase = await createClient();
         
-        // This query depends on your schema for roles. Assuming 'user_roles' table with 'user_id' and 'role'='admin'
-        // If not, we might notifying all tokens or specific users.
-        // Let's assume we fetch all tokens for users who are admins.
-        
-        // Step 1: Get admin user IDs
         const { data: adminRoles, error: roleError } = await supabase
-            .from('user_roles')
-            .select('user_id')
+            .from('customers')
+            .select('id')
             .eq('role', 'admin');
 
         if (roleError || !adminRoles || adminRoles.length === 0) {
@@ -38,7 +32,7 @@ export async function POST(req: NextRequest) {
             return NextResponse.json({ message: 'No admins found' }, { status: 200 });
         }
 
-        const adminIds = adminRoles.map(r => r.user_id);
+        const adminIds = adminRoles.map(r => r.id);
 
         // Step 2: Get FCM tokens for these admins
         const { data: tokensData, error: tokenError } = await supabase
@@ -70,12 +64,12 @@ export async function POST(req: NextRequest) {
             }
         };
 
-        const response = await admin.messaging().sendMulticast(message);
+        const response = await messaging.sendEachForMulticast(message);
         console.log("FCM Response:", response.successCount + ' messages were sent successfully');
         
         if (response.failureCount > 0) {
             const failedTokens: string[] = [];
-            response.responses.forEach((resp, idx) => {
+            response.responses.forEach((resp: any, idx: number) => {
                 if (!resp.success) {
                     failedTokens.push(uniqueTokens[idx]);
                 }
