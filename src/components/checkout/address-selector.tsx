@@ -108,11 +108,11 @@ export default function AddressSelector({ onSelect, initialAddress }: AddressSel
         <div className="space-y-4">
              <div className="flex justify-between items-center mb-2">
                  <label className="text-sm font-bold text-foreground flex items-center gap-2">
-                    <MapPin size={16} /> Delivery Address
+                    <MapPin size={16} /> Alamat Pengiriman
                  </label>
                  {addresses.length > 0 && (
                      <button onClick={() => setIsOpen(true)} className="text-xs text-primary font-bold hover:underline bg-primary/5 px-3 py-1.5 rounded-full transition-colors hover:bg-primary/10">
-                         Change Address
+                         Ubah Alamat
                      </button>
                  )}
              </div>
@@ -120,7 +120,7 @@ export default function AddressSelector({ onSelect, initialAddress }: AddressSel
              <div className="bg-yellow-50 border border-yellow-200 rounded-xl p-3 flex gap-3 text-sm text-yellow-800 mb-4 items-start">
                 <div className="mt-0.5 shrink-0">⚠️</div>
                 <p>
-                    <span className="font-bold">Important:</span> Only delivering to <span className="font-bold">Wonosari area</span>. Orders outside this area or too far might be rejected.
+                    <span className="font-bold">Penting:</span> Hanya pengiriman ke <span className="font-bold">Area Wonosari</span>. Pesanan di luar area ini atau terlalu jauh mungkin akan ditolak (kecuali si pengantar lagi pengen).
                 </p>
              </div>
 
@@ -128,9 +128,9 @@ export default function AddressSelector({ onSelect, initialAddress }: AddressSel
                  <div className="h-32 bg-muted/20 animate-pulse rounded-2xl" />
              ) : addresses.length === 0 ? (
                  <div className="p-6 border-2 border-dashed border-muted rounded-2xl text-center space-y-3 bg-muted/5 hover:bg-muted/10 transition-colors">
-                     <p className="text-sm text-muted-foreground font-medium">You have no saved addresses.</p>
+                     <p className="text-sm text-muted-foreground font-medium">Kamu belum memiliki alamat yang disimpan.</p>
                      <Button size="sm" onClick={() => setIsAddModalOpen(true)} className="rounded-full shadow-lg shadow-primary/20">
-                         <Plus size={14} className="mr-1" /> Add New Address
+                         <Plus size={14} className="mr-1" /> Tambah Alamat Baru
                      </Button>
                  </div>
              ) : (
@@ -152,12 +152,12 @@ export default function AddressSelector({ onSelect, initialAddress }: AddressSel
                                 <p className="text-sm text-muted-foreground leading-relaxed">{selectedAddressObj.address_details}</p>
                             </div>
                             <div className="absolute top-1/2 right-4 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity text-primary">
-                                <span className="text-xs font-bold">Change</span>
+                                <span className="text-xs font-bold">Ubah</span>
                             </div>
                         </div>
                      ) : (
                          <div className="flex items-center justify-between text-muted-foreground p-2">
-                             <span>Select an address to proceed...</span>
+                             <span>Pilih alamat untuk melanjutkan...</span>
                              <ChevronRight size={16} />
                          </div>
                      )}
@@ -196,7 +196,7 @@ export default function AddressSelector({ onSelect, initialAddress }: AddressSel
                      ))}
 
                      <Button variant="outline" className="w-full mt-4 border-dashed h-12 hover:bg-primary/5 hover:text-primary hover:border-primary/30 transition-all font-medium" onClick={() => { setIsOpen(false); setIsAddModalOpen(true); }}>
-                         <Plus size={16} className="mr-2" /> Add New Address
+                         <Plus size={16} className="mr-2" /> Tambah Alamat Baru
                      </Button>
                  </div>
              </Modal>
@@ -211,10 +211,10 @@ export default function AddressSelector({ onSelect, initialAddress }: AddressSel
                     <div className="grid grid-cols-2 gap-4">
                         <div className="space-y-1.5">
                             <label className="text-xs font-bold uppercase text-muted-foreground tracking-wider">Label</label>
-                            <input name="label" placeholder="Home, Office..." className="w-full px-4 py-2.5 rounded-xl border bg-muted/30 focus:bg-background focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-sm outline-none" />
+                            <input name="label" placeholder="Rumah, Kantor..." className="w-full px-4 py-2.5 rounded-xl border bg-muted/30 focus:bg-background focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-sm outline-none" />
                         </div>
                         <div className="space-y-1.5">
-                            <label className="text-xs font-bold uppercase text-muted-foreground tracking-wider">Recipient Name <span className="text-red-500">*</span></label>
+                            <label className="text-xs font-bold uppercase text-muted-foreground tracking-wider">Nama Penerima <span className="text-red-500">*</span></label>
                             <input 
                                 name="recipient_name" 
                                 className={`w-full px-4 py-2.5 rounded-xl border bg-muted/30 focus:bg-background focus:ring-2 focus:border-primary transition-all text-sm outline-none ${formErrors.recipient ? 'border-red-500 bg-red-50 ring-red-200' : 'focus:ring-primary/20'}`}
@@ -225,7 +225,7 @@ export default function AddressSelector({ onSelect, initialAddress }: AddressSel
                     </div>
                     
                     <div className="space-y-1.5">
-                        <label className="text-xs font-bold uppercase text-muted-foreground tracking-wider">Phone Number <span className="text-red-500">*</span></label>
+                        <label className="text-xs font-bold uppercase text-muted-foreground tracking-wider">Nomor Telepon <span className="text-red-500">*</span></label>
                         <input 
                             name="phone" 
                             type="tel"
@@ -236,23 +236,23 @@ export default function AddressSelector({ onSelect, initialAddress }: AddressSel
                     </div>
 
                     <div className="space-y-1.5">
-                        <label className="text-xs font-bold uppercase text-muted-foreground tracking-wider">Full Address <span className="text-red-500">*</span></label>
+                        <label className="text-xs font-bold uppercase text-muted-foreground tracking-wider">Alamat Lengkap <span className="text-red-500">*</span></label>
                         <textarea 
                             name="address_details" 
                             rows={3} 
                             className={`w-full px-4 py-2.5 rounded-xl border bg-muted/30 focus:bg-background focus:ring-2 focus:border-primary transition-all text-sm outline-none resize-none ${formErrors.details ? 'border-red-500 bg-red-50 ring-red-200' : 'focus:ring-primary/20'}`} 
-                            placeholder="Street Name, House Number, District, City, Postcode..." 
+                            placeholder="Jalan, Nomor Rumah, RT/RW Desa, Kecamatan, Kota, Kode Pos..." 
                         />
                         {formErrors.details && <p className="text-[10px] text-red-500 font-bold">{formErrors.details}</p>}
                     </div>
 
                     <div className="flex items-center gap-3 pt-2 p-3 bg-muted/30 rounded-xl cursor-pointer hover:bg-muted/50 transition-colors" onClick={() => document.getElementById('new_default')?.click()}>
                         <input type="checkbox" name="is_default" id="new_default" className="w-5 h-5 rounded border-gray-300 text-primary focus:ring-primary cursor-pointer accent-primary" />
-                        <label htmlFor="new_default" className="text-sm font-medium cursor-pointer select-none">Set as main address</label>
+                        <label htmlFor="new_default" className="text-sm font-medium cursor-pointer select-none">Simpan sebagai alamat default</label>
                     </div>
 
                     <Button type="submit" disabled={isAdding} className="w-full mt-4 h-12 font-bold text-base rounded-xl shadow-lg shadow-primary/20">
-                        {isAdding ? <Loader2 className="animate-spin mr-2" /> : "Save & Use Address"}
+                        {isAdding ? <Loader2 className="animate-spin mr-2" /> : "Simpan & Gunakan Alamat"}
                     </Button>
                 </form>
              </Modal>

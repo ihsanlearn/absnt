@@ -10,7 +10,6 @@ import ManageCoffee from '@/components/profile/manage-coffee'
 import CustomerOrders from '@/components/profile/orders/customer-orders'
 import AdminOrders from '@/components/profile/orders/admin-orders'
 import AddressList from '@/components/profile/address-list'
-import { MapPin } from 'lucide-react'
 
 interface ProfileFormProps {
   initialData: {
@@ -110,7 +109,7 @@ export default function ProfileForm({ initialData }: ProfileFormProps) {
               }`}
            >
                <Package size={18} />
-               Orders
+               Pesanan
                {initialData.role === 'admin' && <span className="ml-auto bg-white/20 text-xs px-2 py-0.5 rounded-full">Admin</span>}
            </button>
 
@@ -157,7 +156,7 @@ export default function ProfileForm({ initialData }: ProfileFormProps) {
              <form action={handleProfileUpdate} className="space-y-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                    <div className="space-y-2">
-                      <label className="text-sm font-medium">Full Name</label>
+                      <label className="text-sm font-medium">Nama Lengkap</label>
                       <input 
                         name="name"
                         defaultValue={initialData.name}
@@ -168,7 +167,7 @@ export default function ProfileForm({ initialData }: ProfileFormProps) {
                    </div>
                    
                    <div className="space-y-2">
-                      <label className="text-sm font-medium">Phone Number</label>
+                      <label className="text-sm font-medium">Nomor Telepon</label>
                       <input 
                         name="phone"
                         defaultValue={initialData.phone}
@@ -178,20 +177,20 @@ export default function ProfileForm({ initialData }: ProfileFormProps) {
                    </div>
                    
                    <div className="space-y-2 md:col-span-2">
-                      <label className="text-sm font-medium">Email Address</label>
+                      <label className="text-sm font-medium">Alamat Email</label>
                       <input 
                         value={initialData.email}
                         disabled
                         className="w-full px-4 py-2 rounded-lg border bg-muted text-muted-foreground cursor-not-allowed"
                       />
-                      <p className="text-xs text-muted-foreground">Email cannot be changed successfully.</p>
+                      <p className="text-xs text-muted-foreground">Email tidak dapat diubah.</p>
                    </div>
                 </div>
 
                 <div className="pt-4">
                   <Button type="submit" disabled={isLoading} className="w-full md:w-auto font-bold px-8">
                     {isLoading ? <Loader2 className="animate-spin mr-2" /> : <Save className="mr-2 w-4 h-4" />}
-                    Save Changes
+                    Simpan Perubahan
                   </Button>
                 </div>
              </form>
@@ -200,7 +199,7 @@ export default function ProfileForm({ initialData }: ProfileFormProps) {
            {activeTab === 'security' && (
              <form id="password-form" action={handlePasswordChange} className="space-y-6">
                 <div className="space-y-2">
-                   <label className="text-sm font-medium">Current Password</label>
+                   <label className="text-sm font-medium">Password Saat Ini</label>
                    <input 
                      name="currentPassword"
                      type="password"
@@ -210,7 +209,7 @@ export default function ProfileForm({ initialData }: ProfileFormProps) {
                 </div>
 
                 <div className="space-y-2">
-                   <label className="text-sm font-medium">New Password</label>
+                   <label className="text-sm font-medium">Password Baru</label>
                    <input 
                      name="password"
                      type="password"
@@ -221,7 +220,7 @@ export default function ProfileForm({ initialData }: ProfileFormProps) {
                 </div>
 
                 <div className="space-y-2">
-                   <label className="text-sm font-medium">Confirm New Password</label>
+                   <label className="text-sm font-medium">Konfirmasi Password Baru</label>
                    <input 
                      name="confirmPassword"
                      type="password"

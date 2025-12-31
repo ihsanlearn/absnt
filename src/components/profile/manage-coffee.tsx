@@ -121,10 +121,10 @@ export default function ManageCoffee() {
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
-        <h3 className="text-lg font-bold">Coffee Menu</h3>
+        <h3 className="text-lg font-bold">Menu Kopi</h3>
         <Button onClick={handleAddNew} size="sm" className="font-bold">
            <Plus size={16} className="mr-2" />
-           Add Coffee
+           Tambah Kopi
         </Button>
       </div>
 
@@ -132,7 +132,7 @@ export default function ManageCoffee() {
         <div className="grid grid-cols-1 gap-4">
           {[1, 2, 3].map((i) => (
              <div key={i} className="flex items-center gap-4 bg-white/40 p-3 rounded-xl border border-muted/50">
-               <Skeleton className="w-16 h-16 rounded-lg flex-shrink-0" />
+               <Skeleton className="w-16 h-16 rounded-lg shrink-0" />
                <div className="flex-1 space-y-2">
                  <Skeleton className="h-5 w-32" />
                  <Skeleton className="h-3 w-48" />
@@ -149,7 +149,7 @@ export default function ManageCoffee() {
         <div className="grid grid-cols-1 gap-4">
            {coffees.map((coffee) => (
              <div key={coffee.id} className="flex items-center gap-4 bg-white/40 p-3 rounded-xl border border-muted/50">
-               <div className="w-16 h-16 bg-muted rounded-lg flex-shrink-0 overflow-hidden relative">
+               <div className="w-16 h-16 bg-muted rounded-lg shrink-0 overflow-hidden relative">
                  {coffee.image_url ? (
                    <img src={coffee.image_url} alt={coffee.name} className="w-full h-full object-cover" />
                  ) : (
@@ -175,7 +175,7 @@ export default function ManageCoffee() {
                </div>
              </div>
            ))}
-           {coffees.length === 0 && <p className="text-center text-muted-foreground py-4">No coffee items found.</p>}
+           {coffees.length === 0 && <p className="text-center text-muted-foreground py-4">Tidak ada menu kopi yang ditemukan.</p>}
         </div>
       )}
 
@@ -183,33 +183,33 @@ export default function ManageCoffee() {
       <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} title={editingCoffee ? "Edit Coffee" : "Add New Coffee"}>
          <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-               <label className="block text-sm font-medium mb-1">Name</label>
+               <label className="block text-sm font-medium mb-1">Nama</label>
                <input name="name" defaultValue={editingCoffee?.name} required className="w-full px-3 py-2 border rounded-lg bg-background" />
             </div>
             
             <div>
-               <label className="block text-sm font-medium mb-1">Description</label>
+               <label className="block text-sm font-medium mb-1">Deskripsi</label>
                <textarea name="description" defaultValue={editingCoffee?.description || ''} className="w-full px-3 py-2 border rounded-lg bg-background h-20" />
             </div>
 
             <div className="grid grid-cols-2 gap-4">
               <div>
-                 <label className="block text-sm font-medium mb-1">Price (Rp)</label>
+                 <label className="block text-sm font-medium mb-1">Harga (Rp)</label>
                  <input name="price" type="number" defaultValue={editingCoffee?.price} required className="w-full px-3 py-2 border rounded-lg bg-background" />
               </div>
               
               <div>
-                 <label className="block text-sm font-medium mb-1">Availability</label>
+                 <label className="block text-sm font-medium mb-1">Tersedia</label>
                  <select name="is_available" defaultValue={String(editingCoffee?.is_available ?? true)} className="w-full px-3 py-2 border rounded-lg bg-background">
-                    <option value="true">Available</option>
-                    <option value="false">Out of Stock</option>
+                    <option value="true">Tersedia</option>
+                    <option value="false">Habis</option>
                  </select>
               </div>
             </div>
 
             <div className="grid grid-cols-2 gap-4">
               <div>
-                 <label className="block text-sm font-medium mb-1">Category</label>
+                 <label className="block text-sm font-medium mb-1">Kategori</label>
                  <select name="category" defaultValue={editingCoffee?.category || 'coffee'} className="w-full px-3 py-2 border rounded-lg bg-background">
                     <option value="coffee">Coffee</option>
                     <option value="non coffee">Non-Coffee</option>
@@ -252,10 +252,10 @@ export default function ManageCoffee() {
         maxWidth="max-w-md"
       >
         <div className="space-y-6">
-            <p className="text-muted-foreground">Are you sure you want to delete this item? This action cannot be undone.</p>
+            <p className="text-muted-foreground">Apakah kamu yakin ingin menghapus menu ini? Tindakan ini tidak dapat dikembalikan.</p>
             <div className="flex justify-end gap-2">
-                <Button variant="ghost" onClick={() => setDeletingId(null)}>Cancel</Button>
-                <Button variant="destructive" onClick={handleConfirmDelete}>Delete</Button>
+                <Button variant="ghost" onClick={() => setDeletingId(null)}>Batal</Button>
+                <Button variant="destructive" onClick={handleConfirmDelete}>Hapus</Button>
             </div>
         </div>
       </Modal>

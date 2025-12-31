@@ -5,11 +5,13 @@ import { useState } from 'react'
 import { Button } from '@/components/ui/button'
 import Link from 'next/link'
 import { TermsModal, PrivacyModal } from '@/components/modals/policies'
+import { Eye, EyeOff } from 'lucide-react'
 
 export default function SignupForm() {
   const [error, setError] = useState<string | null>(null)
   const [showTerms, setShowTerms] = useState(false)
   const [showPrivacy, setShowPrivacy] = useState(false)
+  const [showPassword, setShowPassword] = useState(false)
   
   async function handleSubmit(formData: FormData) {
     const res = await signup(formData)
@@ -66,14 +68,23 @@ export default function SignupForm() {
           
           <div>
             <label className="block text-sm font-medium mb-1">Kata Sandi</label>
-            <input 
-              name="password" 
-              type="password" 
-              required 
-              className="w-full px-4 py-2 rounded-lg border bg-background focus:ring-2 focus:ring-primary focus:outline-hidden"
-              placeholder="••••••••"
-              minLength={6}
-            />
+            <div className="relative">
+              <input 
+                name="password" 
+                type={showPassword ? "text" : "password"} 
+                required 
+                className="w-full px-4 py-2 rounded-lg border bg-background focus:ring-2 focus:ring-primary focus:outline-hidden pr-10"
+                placeholder="••••••••"
+                minLength={6}
+              />
+              <button
+                type="button"
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                onClick={() => setShowPassword(!showPassword)}
+              >
+                {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+              </button>
+            </div>
           </div>
 
           <div>

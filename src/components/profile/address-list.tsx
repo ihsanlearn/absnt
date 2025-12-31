@@ -25,7 +25,6 @@ export default function AddressList() {
     async function refreshAddresses() {
         try {
             const data = await getAddresses()
-            // Map null/undefined to false for is_default
             const cleanData = data?.map(addr => ({
                 ...addr,
                 is_default: !!addr.is_default
@@ -83,10 +82,10 @@ export default function AddressList() {
     return (
         <div className="space-y-6">
             <div className="flex justify-between items-center">
-                <h3 className="font-bold text-lg">My Addresses</h3>
+                <h3 className="font-bold text-lg">Alamat Saya</h3>
                 <Button size="sm" onClick={openAddModal} className="gap-2">
                     <Plus size={16} />
-                    Add New
+                    Tambah Alamat
                 </Button>
             </div>
 
@@ -97,7 +96,7 @@ export default function AddressList() {
             ) : addresses.length === 0 ? (
                 <div className="text-center p-8 border border-dashed rounded-xl text-muted-foreground">
                     <MapPin className="mx-auto h-8 w-8 mb-2 opacity-50" />
-                    <p>No saved addresses.</p>
+                    <p>Tidak ada alamat yang disimpan.</p>
                 </div>
             ) : (
                 <div className="grid gap-4 md:grid-cols-2">
@@ -111,7 +110,7 @@ export default function AddressList() {
                             <div className="flex justify-between items-start">
                                 <div>
                                     <div className="flex items-center gap-2 mb-1">
-                                        <span className="font-bold text-sm">{addr.label || 'Address'}</span>
+                                        <span className="font-bold text-sm">{addr.label || 'Alamat'}</span>
                                         {addr.is_default && (
                                             <span className="text-[10px] bg-primary/10 text-primary px-1.5 py-0.5 rounded-full font-medium">Default</span>
                                         )}
@@ -137,7 +136,7 @@ export default function AddressList() {
                                     disabled={isActionLoading}
                                     className="text-xs text-primary font-medium hover:underline mt-auto self-start"
                                 >
-                                    Set as Default
+                                    Simpan sebagai alamat default
                                 </button>
                             )}
                         </div>
@@ -148,38 +147,38 @@ export default function AddressList() {
             <Modal
                 isOpen={modalOpen}
                 onClose={() => setModalOpen(false)}
-                title={editingAddress ? 'Edit Address' : 'Add New Address'}
+                title={editingAddress ? 'Edit Alamat' : 'Tambah Alamat Baru'}
             >
                 <form action={handleSubmit} className="space-y-4">
                     <div className="grid grid-cols-2 gap-4">
                         <div className="space-y-1">
                             <label className="text-xs font-bold uppercase text-muted-foreground">Label</label>
-                            <input name="label" placeholder="e.g. Home, Office" defaultValue={editingAddress?.label || ''} className="w-full px-3 py-2 rounded-md border bg-background text-sm" />
+                            <input name="label" placeholder="e.g. Rumah, Kantor" defaultValue={editingAddress?.label || ''} className="w-full px-3 py-2 rounded-md border bg-background text-sm" />
                         </div>
                         <div className="space-y-1">
-                            <label className="text-xs font-bold uppercase text-muted-foreground">Recipient Name</label>
+                            <label className="text-xs font-bold uppercase text-muted-foreground">Nama Penerima</label>
                             <input name="recipient_name" required defaultValue={editingAddress?.recipient_name || ''} className="w-full px-3 py-2 rounded-md border bg-background text-sm" />
                         </div>
                     </div>
                     
                     <div className="space-y-1">
-                        <label className="text-xs font-bold uppercase text-muted-foreground">Phone</label>
+                        <label className="text-xs font-bold uppercase text-muted-foreground">Nomor Telepon</label>
                         <input name="phone" required defaultValue={editingAddress?.phone || ''} className="w-full px-3 py-2 rounded-md border bg-background text-sm" />
                     </div>
 
                     <div className="space-y-1">
-                        <label className="text-xs font-bold uppercase text-muted-foreground">Full Address</label>
+                        <label className="text-xs font-bold uppercase text-muted-foreground">Alamat Lengkap</label>
                         <textarea name="address_details" required rows={3} defaultValue={editingAddress?.address_details || ''} className="w-full px-3 py-2 rounded-md border bg-background text-sm" />
                     </div>
 
                     <div className="flex items-center gap-2 pt-2">
                         <input type="checkbox" name="is_default" id="default_check" defaultChecked={editingAddress?.is_default} className="w-4 h-4 rounded border-gray-300 text-primary focus:ring-primary" />
-                        <label htmlFor="default_check" className="text-sm">Set as default address</label>
+                        <label htmlFor="default_check" className="text-sm">Simpan sebagai alamat defualt</label>
                     </div>
 
                     <Button type="submit" disabled={isActionLoading} className="w-full mt-4">
                         {isActionLoading ? <Loader2 className="animate-spin mr-2" /> : <Save className="mr-2 w-4 h-4" />}
-                        Save Address
+                        Simpan Alamat
                     </Button>
                 </form>
             </Modal>

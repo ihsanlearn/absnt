@@ -36,7 +36,7 @@ export async function upsertCoffee(formData: FormData) {
     return { error: 'Unauthorized: Admin only' }
   }
 
-  const id = formData.get('id') as string // If present, it's an update
+  const id = formData.get('id') as string
   const name = formData.get('name') as string
   const description = formData.get('description') as string
   const price = Number(formData.get('price'))
@@ -55,7 +55,7 @@ export async function upsertCoffee(formData: FormData) {
     price,
     is_available,
     image_url: image_url || null,
-    category: category as "coffee" | "non coffee", // Cast after validation
+    category: category as "coffee" | "non coffee",
     tag: tag || null,
   }
 
@@ -80,8 +80,8 @@ export async function upsertCoffee(formData: FormData) {
   }
 
   revalidatePath('/profile')
-  revalidatePath('/') // If displayed on home
-  return { success: 'Coffee saved successfully' }
+  revalidatePath('/')
+  return { success: 'Kopi berhasil disimpan' }
 }
 
 export async function deleteCoffee(id: string) {

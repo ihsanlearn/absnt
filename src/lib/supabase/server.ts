@@ -25,6 +25,14 @@ export async function createClient() {
           }
         },
       },
+      global: {
+        fetch: (url, options) => {
+          return fetch(url, {
+            ...options,
+            signal: options?.signal || AbortSignal.timeout(5000), // 5 second timeout
+          })
+        }
+      }
     }
   )
 }

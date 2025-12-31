@@ -2,18 +2,22 @@
 
 import { createClient } from "@/lib/supabase/server"
 import { CartItem } from "@/context/cart-context"
+import { isStoreOpen, getStoreStatusMessage } from "@/utils/time"
 
 export async function createOrder(formData: FormData) {
   const supabase = await createClient()
 
+  // 0. Validate Store Hours
+  const isStoreOpen = await import("../settings-actions").then(mod => mod.getStoreStatus())
+  if (!isStoreOpen) {
+    return { error: "Maaf, toko sedang tutup. Silahkan coba lagi nanti." }
+  }
+
   // 1. Get Current User
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) {
-    return { error: "You must be logged in to place an order." }
+    return { error: "Anda harus login terlebih dahulu sebelum membuat pesanan." }
   }
-
-  // Get Customer ID (Assuming user is already in customers table, if not we might need to handle that)
-  // For now, assume id matches.
   
   const address = formData.get("address") as string
   const paymentMethod = formData.get("paymentMethod") as "qris" | "cod"
@@ -23,7 +27,7 @@ export async function createOrder(formData: FormData) {
   const items = JSON.parse(itemsJson) as CartItem[]
 
   if (!items || items.length === 0) {
-    return { error: "No items in cart" }
+    return { error: "Tidak ada item dalam keranjang" }
   }
 
   try {
@@ -43,14 +47,14 @@ export async function createOrder(formData: FormData) {
         .single()
 
     if (orderError) {
-        console.error("Order Insert Error:", orderError)
-        return { error: "Failed to create order record." }
+        console.error("Gagal membuat pesanan:", orderError)
+        return { error: "Gagal membuat pesanan." }
     }
 
     // 3. Insert Order Items
     const orderItemsData = items.map(item => ({
         order_id: order.id,
-        coffe_id: item.id, // Note: 'coffe_id' typo matches schema
+        coffe_id: item.id,
         quantity: item.quantity,
         price: item.price
     }))
@@ -60,15 +64,15 @@ export async function createOrder(formData: FormData) {
         .insert(orderItemsData)
 
     if (itemsError) {
-        console.error("Items Insert Error:", itemsError)
+        console.error("Gagal membuat item pesanan:", itemsError)
         // Ideally should rollback order here
-        return { error: "Failed to create order items." }
+        return { error: "Gagal membuat item pesanan." }
     }
 
     return { success: true, orderId: order.id }
 
   } catch (error) {
-    console.error("Create Order Exception:", error)
-    return { error: "An unexpected error occurred." }
+    console.error("Terjadi kesalahan saat membuat pesanan:", error)
+    return { error: "Terjadi kesalahan saat membuat pesanan." }
   }
 }

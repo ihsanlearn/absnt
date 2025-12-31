@@ -7,9 +7,6 @@ import { Truck, Package, Clock, XCircle, CheckCircle, Loader2 } from 'lucide-rea
 import Link from 'next/link'
 import { getOrders } from '@/app/profile/actions'
 
-// Type definition matching the Supabase query structure
-// We can't easily import the inferred type from server action outcome without some helpers, 
-// so defining a compatible interface here is pragmatic.
 interface OrderItem {
   id: string
   quantity: number
@@ -38,8 +35,6 @@ export default function CustomerOrders() {
     async function fetchOrders() {
       try {
         const data = await getOrders()
-        // The data returned from action needs to be cast or checked, 
-        // but for now we trust the structure matches our interface since we wrote the query.
         setOrders(data as any[]) 
       } catch (error) {
         console.error("Failed to load orders", error)
@@ -66,7 +61,7 @@ export default function CustomerOrders() {
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h3 className="text-xl font-bold">My Orders</h3>
+        <h3 className="text-xl font-bold">Pesanan Saya</h3>
         <div className="bg-muted p-1 rounded-lg flex gap-1">
           <button
             onClick={() => setActiveTab('active')}
@@ -76,7 +71,7 @@ export default function CustomerOrders() {
                 : 'text-muted-foreground hover:text-foreground'
             }`}
           >
-            Active
+            Aktif
           </button>
           <button
              onClick={() => setActiveTab('history')}
@@ -86,7 +81,7 @@ export default function CustomerOrders() {
                  : 'text-muted-foreground hover:text-foreground'
              }`}
           >
-            History
+            Pesanan Sebelumnya
           </button>
         </div>
       </div>
@@ -104,7 +99,7 @@ export default function CustomerOrders() {
               className="text-center py-12 text-muted-foreground bg-muted/30 rounded-2xl border border-dashed border-muted"
             >
               <Package className="w-12 h-12 mx-auto mb-3 opacity-50" />
-              <p>No orders found in {activeTab}.</p>
+              <p>Tidak ada pesanan di {activeTab}.</p>
             </motion.div>
           )}
         </AnimatePresence>
@@ -123,7 +118,8 @@ function OrderCard({ order }: { order: Order }) {
     processing: 'bg-blue-100 text-blue-800',
     done: 'bg-green-100 text-green-800',
     completed: 'bg-green-100 text-green-800',
-    cancelled: 'bg-red-100 text-red-800',
+    cancelled: 'bg-gray-100 text-gray-800',
+    rejected: 'bg-red-100 text-red-800',
   }
 
   const statusIcons: Record<string, any> = {
@@ -191,10 +187,10 @@ function OrderCard({ order }: { order: Order }) {
                       }`} />
                    </div>
                    <p className="text-xs text-center mt-2 text-muted-foreground">
-                      {status === 'waiting_payment' ? 'Waiting for payment...' :
-                       status === 'waiting_admin_confirmation' ? 'Waiting for seller confirmation...' :
-                       status === 'processing' ? 'Seller process your order' :
-                       'Order received'}
+                      {status === 'waiting_payment' ? 'Menunggu pembayaran...' :
+                       status === 'waiting_admin_confirmation' ? 'Menunggu konfirmasi admin...' :
+                       status === 'processing' ? 'Penjual sedang memproses pesanan Anda' :
+                       'Pesanan Anda telah diterima'}
                    </p>
                 </div>
              )}
@@ -205,11 +201,11 @@ function OrderCard({ order }: { order: Order }) {
                    <span>Rp {order.total_price.toLocaleString()}</span>
                 </div>
                 <div className="flex justify-between items-center text-xs text-muted-foreground mb-2">
-                   <span>Postage</span>
+                   <span>Biaya Pengiriman</span>
                    <span>Rp {order.postage.toLocaleString()}</span>
                 </div>
                 <div className="flex justify-between items-center pt-2 border-t border-dashed border-muted">
-                   <span className="font-medium text-sm">Total Payment</span>
+                   <span className="font-medium text-sm">Total Pembayaran</span>
                    <span className="text-lg font-bold text-primary">Rp {(order.total_price + order.postage).toLocaleString()}</span>
                 </div>
              </div>

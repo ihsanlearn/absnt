@@ -34,7 +34,7 @@ export default async function ProfilePage() {
            <Link href="/" className="p-2 hover:bg-muted rounded-full transition-colors">
              <ArrowLeft size={20} />
            </Link>
-           <h1 className="text-xl font-bold">My Settings</h1>
+           <h1 className="text-xl font-bold">Profil Saya</h1>
         </div>
       </div>
 

@@ -8,7 +8,6 @@ import { motion, AnimatePresence } from "framer-motion"
 import { Plus, Minus } from "lucide-react"
 import Image from "next/image"
 import { useCart } from "@/context/cart-context"
-import { Loader2 } from "lucide-react"
 import { User } from "@supabase/supabase-js"
 import { useRouter } from "next/navigation"
 

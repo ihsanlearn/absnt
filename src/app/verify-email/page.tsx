@@ -10,22 +10,22 @@ export default function VerifyEmailPage() {
           <Mail className="w-8 h-8 text-primary" />
         </div>
         
-        <h1 className="text-2xl font-bold font-(family-name:--font-lobster) mb-4">Check Your Email</h1>
+        <h1 className="text-2xl font-bold font-(family-name:--font-lobster) mb-4">Cek Email Kamu</h1>
         
         <p className="text-muted-foreground mb-8">
-          Registration successful! We've sent a verification link to your email address. Please click the link to activate your account.
+          Registrasi Berhasil! Kami telah mengirimkan link verifikasi ke alamat email kamu. Silahkan klik link untuk mengaktifkan akunmu.
         </p>
 
         <div className="space-y-4">
             <Button asChild className="w-full font-bold">
             <Link href="/login">
-                Go to Login
+                Login
             </Link>
             </Button>
             
             <Button asChild variant="outline" className="w-full">
             <Link href="/">
-                Back to Home
+                Kembali ke Beranda
             </Link>
             </Button>
         </div>

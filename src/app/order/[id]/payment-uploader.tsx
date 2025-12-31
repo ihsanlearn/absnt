@@ -34,8 +34,8 @@ export default function PaymentUploader({ orderId }: { orderId: string }) {
             <div className="flex justify-center mb-2 text-green-600">
                 <CheckCircle size={32} />
             </div>
-            <h3 className="font-bold text-green-800">Payment Proof Sent!</h3>
-            <p className="text-sm text-green-700 mt-1">Please wait for admin confirmation.</p>
+            <h3 className="font-bold text-green-800">Bukti pembayaran berhasil dikirim!</h3>
+            <p className="text-sm text-green-700 mt-1">Silahkan tunggu konfirmasi admin.</p>
         </div>
     )
   }
@@ -54,13 +54,13 @@ export default function PaymentUploader({ orderId }: { orderId: string }) {
             {file ? (
                 <div className="text-primary font-medium">
                      <p className="line-clamp-1">{file.name}</p>
-                     <p className="text-xs text-muted-foreground mt-1">Click to change</p>
+                     <p className="text-xs text-muted-foreground mt-1">Ubah</p>
                 </div>
             ) : (
                 <div className="flex flex-col items-center gap-2">
                     <Upload className="text-muted-foreground" />
-                    <span className="text-sm font-medium">Click to Upload Payment Proof</span>
-                    <span className="text-xs text-muted-foreground">Supported formats: JPG, PNG</span>
+                    <span className="text-sm font-medium">Klik untuk mengunggah bukti pembayaran</span>
+                    <span className="text-xs text-muted-foreground">Format yang didukung: JPG, PNG</span>
                 </div>
             )}
         </div>
@@ -70,7 +70,7 @@ export default function PaymentUploader({ orderId }: { orderId: string }) {
             disabled={!file || isUploading}
             onClick={handleUpload}
         >
-            {isUploading ? <Loader2 className="animate-spin" /> : "Confirm Payment"}
+            {isUploading ? <Loader2 className="animate-spin" /> : "Konfirmasi Pembayaran"}
         </Button>
     </div>
   )

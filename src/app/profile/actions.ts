@@ -32,7 +32,7 @@ export async function updateProfile(formData: FormData) {
   }
 
   revalidatePath('/profile')
-  revalidatePath('/') // To update header
+  revalidatePath('/')
   
   return { success: 'Profile updated successfully' }
 }
@@ -45,11 +45,11 @@ export async function changePassword(formData: FormData) {
   const confirmPassword = formData.get('confirmPassword') as string
 
   if (password !== confirmPassword) {
-    return { error: 'Passwords do not match' }
+    return { error: 'Password tidak sesuai' }
   }
   
   if (password.length < 6) {
-    return { error: 'Password must be at least 6 characters' }
+    return { error: 'Password minimal 6 karakter' }
   }
 
   // Get current user to get email for re-authentication
@@ -66,7 +66,7 @@ export async function changePassword(formData: FormData) {
   })
 
   if (signInError) {
-    return { error: 'Current password is incorrect' }
+    return { error: 'Password lama tidak sesuai' }
   }
 
   // If correct, proceed to update
@@ -78,7 +78,7 @@ export async function changePassword(formData: FormData) {
     return { error: error.message }
   }
 
-  return { success: 'Password updated successfully' }
+  return { success: 'Password berhasil diubah' }
 }
 
 export async function getOrders() {
@@ -153,7 +153,7 @@ export async function getAdminOrders() {
   return orders
 }
 
-export async function updateOrderStatus(orderId: string, newStatus: string) {
+export async function updateOrderStatus(orderId: string, newStatus: string, reason?: string) {
     const supabase = await createClient()
 
      // Check role
@@ -168,9 +168,14 @@ export async function updateOrderStatus(orderId: string, newStatus: string) {
     
     if (customer?.role !== 'admin') return { error: 'Unauthorized' }
 
+    const updateData: any = { order_status: newStatus }
+    if (reason) {
+        updateData.rejection_reason = reason
+    }
+
     const { error } = await supabase
         .from('orders')
-        .update({ order_status: newStatus as any })
+        .update(updateData)
         .eq('id', orderId)
     
     if (error) return { error: error.message }

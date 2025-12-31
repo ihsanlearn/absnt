@@ -1,13 +1,15 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Filter, Eye, Check, X, Clock, Loader2 } from 'lucide-react'
 import Modal from '@/components/ui/modal'
 import { getAdminOrders, updateOrderStatus } from '@/app/profile/actions'
+import { getStoreStatus, updateStoreStatus } from '@/app/settings-actions'
 import { PaymentProofImage } from '@/components/ui/payment-proof-image'
+import { useFcmToken } from '@/hooks/use-fcm'
+import { createClient } from '@/lib/supabase/client'
 
 export type OrderStatus = 'pending' | 'waiting_payment' | 'waiting_admin_confirmation' | 'processing' | 'done' | 'completed' | 'cancelled' | 'rejected'
 
@@ -45,16 +47,18 @@ interface Order {
 }
 
 export default function AdminOrders() {
+  const { token, notificationPermission } = useFcmToken() // Register device for push notifications
   const [filter, setFilter] = useState<'all' | OrderStatus>('all')
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null)
   
   const [orders, setOrders] = useState<Order[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [isUpdating, setIsUpdating] = useState(false)
+  const [storeStatus, setStoreStatus] = useState(true)
 
   const [confirmationModal, setConfirmationModal] = useState<{
       isOpen: boolean
-      type: 'process' | 'complete' | 'cancel' | null
+      type: 'process' | 'complete' | 'cancel' | 'open_store' | 'close_store' | null
       orderId: string | null
       orderStatus: OrderStatus | null
   }>({
@@ -64,10 +68,18 @@ export default function AdminOrders() {
       orderStatus: null
   })
 
+  const [rejectionReason, setRejectionReason] = useState('')
+
   async function fetchOrders() {
       setIsLoading(true)
       try {
-          const data = await getAdminOrders()
+          const [data, status] = await Promise.all([
+              getAdminOrders(),
+              getStoreStatus()
+          ])
+          
+          setStoreStatus(status)
+
           // Map data to match interface if needed, or use directly if fields align
           const mappedOrders = data?.map((o: any) => ({
              ...o,
@@ -87,9 +99,48 @@ export default function AdminOrders() {
       }
   }
 
+
+
   useEffect(() => {
     fetchOrders()
+
+    const supabase = createClient()
+    const channel = supabase
+      .channel('admin-orders')
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'orders' }, (payload) => {
+          console.log('Realtime update:', payload)
+          fetchOrders()
+      })
+      .subscribe()
+
+    return () => {
+        supabase.removeChannel(channel)
+    }
   }, [])
+  
+  function openStoreConfirmation() {
+      const type = storeStatus ? 'close_store' : 'open_store'
+      setConfirmationModal({
+          isOpen: true,
+          type: type as any, // Using 'any' briefly or I will update the type definition next
+          orderId: 'store-settings',
+          orderStatus: null
+      })
+  }
+
+  async function handleConfirmToggleStore() {
+        const newStatus = !storeStatus
+        setIsUpdating(true)
+        setConfirmationModal(prev => ({ ...prev, isOpen: false }))
+        
+        const res = await updateStoreStatus(newStatus)
+        if (res.success) {
+            setStoreStatus(newStatus)
+        } else {
+             alert("Failed to update store status: " + res.error)
+        }
+        setIsUpdating(false)
+  }
 
   const filteredOrders = filter === 'all' 
     ? orders 
@@ -109,7 +160,7 @@ export default function AdminOrders() {
     if (!orderId || !orderStatus) return
 
     setIsUpdating(true)
-    const result = await updateOrderStatus(orderId, orderStatus)
+    const result = await updateOrderStatus(orderId, orderStatus, rejectionReason)
     
     if (result.success) {
         setOrders(prev => prev.map(o => o.id === orderId ? { ...o, order_status: orderStatus } : o))
@@ -117,6 +168,7 @@ export default function AdminOrders() {
             setSelectedOrder(prev => prev ? { ...prev, order_status: orderStatus } : null)
         }
         setConfirmationModal({ isOpen: false, type: null, orderId: null, orderStatus: null })
+        setRejectionReason('') // Reset
     } else {
         alert("Failed to update status: " + result.error)
     }
@@ -131,7 +183,16 @@ export default function AdminOrders() {
     <div className="space-y-6">
        {/* Header & Filter */}
        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-          <h3 className="text-xl font-bold">Incoming Orders</h3>
+          <div className="flex items-center gap-4">
+            <h3 className="text-xl font-bold">Incoming Orders</h3>
+            <div 
+                className={`flex items-center gap-2 px-3 py-1 rounded-full text-xs font-bold cursor-pointer border transition-colors ${storeStatus ? 'bg-green-100 text-green-700 border-green-200 hover:bg-green-200' : 'bg-red-100 text-red-700 border-red-200 hover:bg-red-200'}`}
+                onClick={openStoreConfirmation}
+            >
+                <div className={`w-2 h-2 rounded-full ${storeStatus ? 'bg-green-600' : 'bg-red-600'}`} />
+                {storeStatus ? 'OPEN ORDER' : 'CLOSE ORDER'}
+            </div>
+          </div>
           <div className="flex gap-2 p-1 bg-muted rounded-lg overflow-x-auto max-w-full">
              {(['all', 'completed', 'waiting_payment', 'waiting_admin_confirmation', 'processing', 'rejected', 'cancelled'] as const).map((status) => (
                 <button
@@ -152,11 +213,11 @@ export default function AdminOrders() {
        {/* Orders List */}
        <div className="border rounded-xl bg-background overflow-hidden shadow-sm">
           <div className="grid grid-cols-[1fr_24px] md:grid-cols-[2fr_1.5fr_120px_100px_100px_50px] gap-4 p-4 border-b bg-muted/40 text-xs font-medium text-muted-foreground uppercase tracking-wider items-center">
-             <div className="hidden md:block">Order Details</div>
+             <div className="hidden md:block">Detail Pesanan</div>
              <div className="hidden md:block">Customer</div>
              <div className="hidden md:block">Total</div>
              <div className="hidden md:block">Status</div>
-             <div className="hidden md:block">Payment</div>
+             <div className="hidden md:block">Pembayaran</div>
              <div className="md:hidden col-span-2">Orders</div>
              <div className="hidden md:flex justify-end pr-2">Act</div>
           </div>
@@ -214,7 +275,7 @@ export default function AdminOrders() {
                         <div className="col-span-2 md:hidden pt-2 border-t mt-2 flex justify-between items-center text-xs text-muted-foreground">
                             <span>{order.payment_method} · {order.items.length} Items</span>
                             <Button variant="outline" size="sm" className="h-7 text-xs" onClick={() => setSelectedOrder(order)}>
-                                View Details
+                                Lihat Detail
                             </Button>
                         </div>
                     </div>
@@ -222,7 +283,7 @@ export default function AdminOrders() {
             ) : (
                 <div className="p-16 flex flex-col items-center justify-center text-muted-foreground gap-2">
                     <Filter className="h-8 w-8 opacity-20" />
-                    <p>No orders found matching this filter.</p>
+                    <p>Tidak ada pesanan.</p>
                 </div>
             )}
           </div>
@@ -274,11 +335,11 @@ export default function AdminOrders() {
                             <span>Rp {selectedOrder.total_price.toLocaleString()}</span>
                         </div>
                         <div className="flex justify-between text-muted-foreground">
-                            <span>Postage</span>
+                            <span>Biaya Pengiriman</span>
                             <span>Rp {selectedOrder.postage.toLocaleString()}</span>
                         </div>
                         <div className="flex justify-between pt-2 border-t border-dashed">
-                            <span className="font-bold">Total Amount</span>
+                            <span className="font-bold">Total</span>
                             <span className="font-bold text-primary text-lg">Rp {(selectedOrder.total_price + selectedOrder.postage).toLocaleString()}</span>
                         </div>
                     </div>
@@ -286,13 +347,13 @@ export default function AdminOrders() {
 
                 <div className="bg-muted/30 p-4 rounded-xl space-y-4 text-sm">
                     <div className="flex justify-between">
-                        <span className="text-muted-foreground">Payment Method:</span>
+                        <span className="text-muted-foreground">Metode Pembayaran:</span>
                         <span className="font-medium uppercase">{selectedOrder.payment_method}</span>
                     </div>
 
                     {selectedOrder.payment_method === 'qris' && selectedOrder.payments && selectedOrder.payments.length > 0 && selectedOrder.payments[0].proof_url && (
                         <div className="space-y-2">
-                             <p className="font-medium">Payment Proof</p>
+                             <p className="font-medium">Bukti Pembayaran</p>
                              <div className="rounded-lg overflow-hidden border bg-background">
                                  {/* Using a helper to get URL or just constructing it if environment is known. */}
                                  {/* Since we can't easily use async getPublicUrl in render, we use a component or specialized image logic. */}
@@ -317,14 +378,14 @@ export default function AdminOrders() {
                                 onClick={() => openConfirmation(selectedOrder.id, 'rejected', 'cancel')}
                                 disabled={isUpdating}
                            >
-                                Reject Order
+                                Tolak Pesanan
                            </Button>
                            <Button 
                                 className="bg-blue-600 hover:bg-blue-700" 
                                 onClick={() => openConfirmation(selectedOrder.id, 'processing', 'process')}
                                 disabled={isUpdating}
                            >
-                                Accept & Process
+                                Terima & Proses
                            </Button>
                         </>
                     )}
@@ -334,12 +395,12 @@ export default function AdminOrders() {
                             onClick={() => openConfirmation(selectedOrder.id, 'completed', 'complete')}
                             disabled={isUpdating}
                          >
-                             Mark as Completed
+                             Tandai Pesanan Selesai
                          </Button>
                     )}
                     {['done', 'completed', 'cancelled', 'rejected'].includes(selectedOrder.order_status) && (
                         <p className="col-span-2 text-center text-sm text-muted-foreground italic">
-                            Order is closed.
+                            Order Closed.
                         </p>
                     )}
                 </div>
@@ -352,20 +413,39 @@ export default function AdminOrders() {
           isOpen={confirmationModal.isOpen}
           onClose={() => setConfirmationModal(prev => ({ ...prev, isOpen: false }))}
           title={
-              confirmationModal.type === 'cancel' ? 'Reject Order?' :
-              confirmationModal.type === 'process' ? 'Accept Order?' :
-              'Complete Order?'
+              confirmationModal.type === 'cancel' ? 'Tolak Pesanan?' :
+              confirmationModal.type === 'process' ? 'Terima & Proses Pesanan?' :
+              confirmationModal.type === 'open_store' ? 'Buka Toko?' :
+              confirmationModal.type === 'close_store' ? 'Tutup Toko?' :
+              'Tandai Pesanan Selesai?'
           }
            maxWidth="max-w-md"
        >
           <div className="space-y-4">
               <p className="text-muted-foreground">
                   {confirmationModal.type === 'cancel' 
-                    ? 'Are you sure you want to reject this order? This action cannot be undone.' 
+                    ? 'Kamu yakin ingin menolak pesanan ini? Tindakan ini tidak dapat diulang.' 
                     : confirmationModal.type === 'process'
-                    ? 'Are you sure you want to accept and process this order?'
-                    : 'Are you sure you want to mark this order as completed?'}
+                    ? 'Kamu yakin ingin menerima dan memproses pesanan ini?'
+                    : confirmationModal.type === 'open_store'
+                    ? 'Apakah anda yakin ingin membuka toko? Pelanggan akan dapat membuat pesanan.'
+                    : confirmationModal.type === 'close_store'
+                    ? 'Apakah anda yakin ingin menutup toko? Pelanggan tidak akan dapat membuat pesanan baru.'
+                    : 'Kamu yakin ingin menandai pesanan ini sebagai selesai?'}
               </p>
+
+              {confirmationModal.type === 'cancel' && (
+                  <div className="pt-2">
+                       <label className="text-sm font-medium mb-1 block">Alasan Penolakan:</label>
+                       <textarea 
+                           className="w-full border rounded-lg p-2 text-sm h-24 bg-background focus:ring-2 focus:ring-red-500 focus:outline-hidden"
+                           placeholder="Contoh: Lokasi pengiriman diluar jangkauan area kami."
+                           value={rejectionReason}
+                           onChange={(e) => setRejectionReason(e.target.value)}
+                       />
+                       <p className="text-xs text-muted-foreground mt-1">Alasan ini akan ditampilkan ke pelanggan.</p>
+                  </div>
+              )}
               
               <div className="flex justify-end gap-3 pt-4">
                   <Button 
@@ -377,15 +457,18 @@ export default function AdminOrders() {
                   </Button>
                   <Button 
                     className={
-                        confirmationModal.type === 'cancel' ? 'bg-red-600 hover:bg-red-700' :
-                        confirmationModal.type === 'process' ? 'bg-blue-600 hover:bg-blue-700' :
+                        confirmationModal.type === 'cancel' || confirmationModal.type === 'close_store' ? 'bg-red-600 hover:bg-red-700' :
+                        confirmationModal.type === 'process' || confirmationModal.type === 'open_store' ? 'bg-blue-600 hover:bg-blue-700' :
                         'bg-green-600 hover:bg-green-700'
                     }
-                    onClick={handleConfirmAction}
+                    onClick={['open_store', 'close_store'].includes(confirmationModal.type as string) ? handleConfirmToggleStore : handleConfirmAction}
                     disabled={isUpdating}
                   >
                       {isUpdating && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                      {confirmationModal.type === 'cancel' ? 'Yes, Reject' : 'Yes, Confirm'}
+                      {confirmationModal.type === 'cancel' ? 'Ya, Tolak' : 
+                       confirmationModal.type === 'close_store' ? 'Ya, Tutup' :
+                       confirmationModal.type === 'open_store' ? 'Ya, Buka' :
+                       'Ya, Konfirmasi'}
                   </Button>
               </div>
           </div>
