@@ -304,7 +304,19 @@ export default function AdminOrders() {
                         <div className="text-muted-foreground text-sm space-y-1">
                              {/* Email is optional/removed from query, so careful accessing it */}
                              {selectedOrder.customers?.email && <p>{selectedOrder.customers.email}</p>}
-                             <p>{selectedOrder.customers?.phone}</p>
+                             <p className="flex items-center gap-2">
+                                {selectedOrder.customers?.phone}
+                                {selectedOrder.customers?.phone && (
+                                    <a 
+                                        href={`https://wa.me/${selectedOrder.customers.phone.replace(/^0/, '62').replace(/\D/g, '')}?text=${encodeURIComponent(`Absent Coffee! Halo, pesanan sudah sampai atas nama ${selectedOrder.customer_name}`)}`}
+                                        target="_blank"
+                                        rel="noreferrer"
+                                        className="text-green-600 hover:text-green-700 font-bold text-xs border border-green-200 bg-green-50 px-2 py-0.5 rounded-full flex items-center gap-1"
+                                    >
+                                        Hubungi WA ↗
+                                    </a>
+                                )}
+                             </p>
                              <p className="border-t pt-1 mt-1">{selectedOrder.delivery_address}</p>
                         </div>
                     </div>

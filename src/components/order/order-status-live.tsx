@@ -140,7 +140,7 @@ export default function OrderStatusLive({ initialOrder }: OrderStatusLiveProps) 
                         <p>
                             <span className="font-bold">Penting:</span> Hanya pengiriman ke <span className="font-bold">Area Wonosari</span>. Pesanan di luar area ini atau terlalu jauh mungkin akan ditolak (kecuali si pengantar lagi pengen).
                             <a 
-                                href={`https://wa.me/628123456789?text=Mas, mau engga ya antar ke alamat saya di ${order.delivery_address || '...'} sebelum saya bayar, mohon konfirmasi cepatnya.`} 
+                                href={`https://wa.me/6282220347257?text=Mas, mau engga ya antar ke alamat saya di ${order.delivery_address || '...'} sebelum saya bayar, mohon konfirmasi cepatnya.`} 
                                 target="_blank" 
                                 rel="noreferrer"
                                 className="inline-block ml-1 text-primary hover:underline font-bold"
