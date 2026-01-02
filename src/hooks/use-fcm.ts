@@ -62,12 +62,13 @@ export function useFcmToken() {
       const messaging = getMessaging(app)
       const unsubscribe = onMessage(messaging, (payload) => {
         console.log('Foreground message received:', payload)
-        const { title, body, image } = payload.notification || {}
+        // Handle BOTH 'notification' (legacy) and 'data' (new checklist) payloads
+        const { title, body } = payload.data || payload.notification || {}
         
-        if (Notification.permission === 'granted') {
-          new Notification(title || 'New Message', {
+        if (Notification.permission === 'granted' && title) {
+          new Notification(title, {
             body: body,
-            icon: '/icon-192.png' // consistent icon
+            icon: '/logo.jpg' // Updated to match SW
           })
         }
       })

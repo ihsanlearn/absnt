@@ -42,16 +42,13 @@ export async function POST(req: NextRequest) {
         const messaging = getMessaging(app);
 
         const message = {
-            notification: {
+            tokens: uniqueTokens,
+            data: {
                 title: "Test Notification 🔔",
                 body: "This is a test message to validate your settings.",
+                url: "/profile",
             },
-            tokens: uniqueTokens,
-            webpush: {
-                fcmOptions: {
-                    link: "/profile",
-                },
-            },
+           // notification field omitted to prevent auto-handling by FCM SW
         };
 
         const response = await messaging.sendEachForMulticast(message);
