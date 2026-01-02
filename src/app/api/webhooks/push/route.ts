@@ -50,12 +50,27 @@ export async function POST(req: NextRequest) {
         // Remove duplicates
         const uniqueTokens = Array.from(new Set(tokens));
 
+        // 2b. Fetch Order Items for Rich Notification
+        const { data: orderItems } = await supabase
+            .from('order_items')
+            .select('quantity, coffee:coffees(name)')
+            .eq('order_id', orderId);
+
+        let bodyText = `Order #${orderId.slice(0, 8).toUpperCase()} from ${customerName}`;
+        
+        if (orderItems && orderItems.length > 0) {
+            const itemSummary = orderItems
+                .map((i: any) => `${i.quantity}x ${i.coffee?.name || 'Item'}`)
+                .join(', ');
+            bodyText = `${itemSummary} • From ${customerName}`;
+        }
+
         // 3. Send Notification
         const message = {
             tokens: uniqueTokens,
             data: {
                 title: 'New Order Received! ☕',
-                body: `Order #${orderId.slice(0, 8).toUpperCase()} from ${customerName}`,
+                body: bodyText,
                 url: `/profile`
             }
             // notification field omitted

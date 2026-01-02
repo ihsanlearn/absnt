@@ -48,8 +48,8 @@ self.addEventListener('push', function(event) {
             const title = data.title || 'New Notification';
             const options = {
                 body: data.body || '',
-                icon: '/logo.jpg', // Changed to logo.jpg as requested in previous turns
-                badge: '/logo.jpg',
+                icon: '/logo.jpg', 
+                badge: '/logo.png',
                 data: {
                     url: data.url || '/'
                 }
