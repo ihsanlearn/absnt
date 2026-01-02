@@ -52,16 +52,13 @@ export async function POST(req: NextRequest) {
 
         // 3. Send Notification
         const message = {
-            notification: {
+            tokens: uniqueTokens,
+            data: {
                 title: 'New Order Received! ☕',
                 body: `Order #${orderId.slice(0, 8).toUpperCase()} from ${customerName}`,
-            },
-            tokens: uniqueTokens,
-            webpush: {
-                fcmOptions: {
-                    link: `/profile` 
-                }
+                url: `/profile`
             }
+            // notification field omitted
         };
 
         const response = await messaging.sendEachForMulticast(message);
