@@ -83,7 +83,16 @@ export async function signup(formData: FormData) {
 
 export async function logout() {
   const supabase = await createClient()
-  await supabase.auth.signOut()
+  
+  const { error } = await supabase.auth.signOut()
+  
+  if (error) {
+    console.error('Logout error:', error)
+    // You might want to return this error if you change this to return a value
+    // return { error: error.message }
+  } else {
+    console.log('Logout successful')
+  }
   
   revalidatePath('/', 'layout')
   redirect('/login')

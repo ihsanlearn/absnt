@@ -19,7 +19,10 @@ export default function UserMenu({ user }: UserMenuProps) {
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
       if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+        console.log("Clicked outside, closing menu. Target:", event.target)
         setIsOpen(false)
+      } else {
+         console.log("Clicked inside menu")
       }
     }
     document.addEventListener("mousedown", handleClickOutside)
@@ -68,8 +71,12 @@ export default function UserMenu({ user }: UserMenuProps) {
               </Link>
               
               <button 
-                onClick={() => logout()}
-                className="flex items-center gap-3 w-full px-3 py-2.5 text-sm rounded-xl hover:bg-red-50 text-muted-foreground hover:text-red-500 transition-colors"
+                onMouseDown={() => console.log('Logout MouseDown')}
+                onClick={() => {
+                  console.log('Logout clicked')
+                  logout()
+                }}
+                className="flex items-center gap-3 w-full px-3 py-2.5 text-sm cursor-pointer rounded-xl hover:bg-red-50 text-muted-foreground hover:text-red-500 transition-colors"
               >
                 <LogOut size={16} />
                 Keluar
