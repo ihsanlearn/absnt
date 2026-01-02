@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { getMessaging, getToken } from 'firebase/messaging'
+import { getMessaging, getToken, onMessage } from 'firebase/messaging'
 import { app } from '@/lib/firebase'
 import { createClient } from '@/lib/supabase/client'
 
@@ -55,6 +55,25 @@ export function useFcmToken() {
           requestPermission()
       }
   }, [notificationPermission])
+
+  // Foreground message listener
+  useEffect(() => {
+    if (typeof window !== 'undefined' && 'serviceWorker' in navigator) {
+      const messaging = getMessaging(app)
+      const unsubscribe = onMessage(messaging, (payload) => {
+        console.log('Foreground message received:', payload)
+        const { title, body, image } = payload.notification || {}
+        
+        if (Notification.permission === 'granted') {
+          new Notification(title || 'New Message', {
+            body: body,
+            icon: '/icon-192.png' // consistent icon
+          })
+        }
+      })
+      return () => unsubscribe()
+    }
+  }, [])
 
   return { token, notificationPermission, requestPermission }
 }
