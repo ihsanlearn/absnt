@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import { Filter, Eye, Check, X, Clock, Loader2 } from 'lucide-react'
+import { Filter, Eye, Check, X, Clock, Loader2, Bell } from 'lucide-react'
 import Modal from '@/components/ui/modal'
 import { getAdminOrders, updateOrderStatus } from '@/app/profile/actions'
 import { getStoreStatus, updateStoreStatus } from '@/app/settings-actions'
@@ -128,6 +128,25 @@ export default function AdminOrders() {
       })
   }
 
+  async function handleTestNotification() {
+      setIsUpdating(true)
+      try {
+          const res = await fetch('/api/admin/test-notification', { method: 'POST' })
+          const data = await res.json()
+          
+          if (res.ok) {
+              alert(`Notification sent! Success: ${data.sent_count}, Failed: ${data.failed_count}`)
+          } else {
+              alert(`Failed: ${data.message || data.error}`)
+          }
+      } catch (error) {
+          console.error("Test notification error", error)
+          alert("An error occurred while sending test notification")
+      } finally {
+          setIsUpdating(false)
+      }
+  }
+
   async function handleConfirmToggleStore() {
         const newStatus = !storeStatus
         setIsUpdating(true)
@@ -192,6 +211,17 @@ export default function AdminOrders() {
                 <div className={`w-2 h-2 rounded-full ${storeStatus ? 'bg-green-600' : 'bg-red-600'}`} />
                 {storeStatus ? 'OPEN ORDER' : 'CLOSE ORDER'}
             </div>
+            
+            <Button 
+                variant="outline" 
+                size="sm" 
+                className="h-7 text-xs gap-1"
+                onClick={handleTestNotification}
+                disabled={isUpdating}
+            >
+                <Bell size={12} />
+                Test Notif
+            </Button>
           </div>
           <div className="flex gap-2 p-1 bg-muted rounded-lg overflow-x-auto max-w-full">
              {(['all', 'completed', 'waiting_payment', 'waiting_admin_confirmation', 'processing', 'rejected', 'cancelled'] as const).map((status) => (
