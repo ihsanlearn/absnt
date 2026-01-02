@@ -47,7 +47,7 @@ interface Order {
 }
 
 export default function AdminOrders() {
-  const { token, notificationPermission } = useFcmToken() // Register device for push notifications
+  const { token, notificationPermission, requestPermission } = useFcmToken() // Register device for push notifications
   const [filter, setFilter] = useState<'all' | OrderStatus>('all')
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null)
   
@@ -161,6 +161,17 @@ export default function AdminOrders() {
         setIsUpdating(false)
   }
 
+  async function handleEnableNotifications() {
+      const result = await requestPermission()
+      if (result && result.success) {
+          alert("Notifications enabled successfully!")
+      } else {
+          if (result?.error === 'Permission denied') {
+              alert("Permission denied. Please enable notifications in your browser settings.")
+          }
+      }
+  }
+
   const filteredOrders = filter === 'all' 
     ? orders 
     : orders.filter(o => o.order_status === filter)
@@ -212,16 +223,30 @@ export default function AdminOrders() {
                 {storeStatus ? 'OPEN ORDER' : 'CLOSE ORDER'}
             </div>
             
-            <Button 
-                variant="outline" 
-                size="sm" 
-                className="h-7 text-xs gap-1"
-                onClick={handleTestNotification}
-                disabled={isUpdating}
-            >
-                <Bell size={12} />
-                Notification Test
-            </Button>
+            {notificationPermission === 'default' && (
+                <Button 
+                    variant="default" 
+                    size="sm" 
+                    className="h-7 text-xs gap-1 bg-blue-600 hover:bg-blue-700"
+                    onClick={handleEnableNotifications}
+                >
+                    <Bell size={12} />
+                    Enable Notif
+                </Button>
+            )}
+
+            {notificationPermission === 'granted' && (
+                <Button 
+                    variant="outline" 
+                    size="sm" 
+                    className="h-7 text-xs gap-1"
+                    onClick={handleTestNotification}
+                    disabled={isUpdating}
+                >
+                    <Bell size={12} />
+                    Test Notif
+                </Button>
+            )}
           </div>
           <div className="flex gap-2 p-1 bg-muted rounded-lg overflow-x-auto max-w-full">
              {(['all', 'completed', 'waiting_payment', 'waiting_admin_confirmation', 'processing', 'rejected', 'cancelled'] as const).map((status) => (
