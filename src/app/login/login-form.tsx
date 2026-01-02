@@ -1,20 +1,23 @@
 'use client'
 
 import { login } from '../auth/actions'
-import { useState } from 'react'
+import { useState, useTransition } from 'react'
 import { Button } from '@/components/ui/button'
 import Link from 'next/link'
-import { Eye, EyeOff } from 'lucide-react'
+import { Eye, EyeOff, Loader2 } from 'lucide-react'
 
 export default function LoginForm() {
   const [error, setError] = useState<string | null>(null)
   const [showPassword, setShowPassword] = useState(false)
+  const [isPending, startTransition] = useTransition()
   
   async function handleSubmit(formData: FormData) {
-    const res = await login(formData)
-    if (res?.error) {
-      setError(res.error)
-    }
+    startTransition(async () => {
+      const res = await login(formData)
+      if (res?.error) {
+        setError(res.error)
+      }
+    })
   }
 
   return (
@@ -32,7 +35,8 @@ export default function LoginForm() {
               name="email" 
               type="email" 
               required 
-              className="w-full px-4 py-2 rounded-lg border bg-background focus:ring-2 focus:ring-primary focus:outline-hidden"
+              disabled={isPending}
+              className="w-full px-4 py-2 rounded-lg border bg-background focus:ring-2 focus:ring-primary focus:outline-hidden disabled:opacity-50"
               placeholder="absent@gmail.com"
             />
           </div>
@@ -44,7 +48,8 @@ export default function LoginForm() {
                 name="password" 
                 type={showPassword ? "text" : "password"} 
                 required 
-                className="w-full px-4 py-2 rounded-lg border bg-background focus:ring-2 focus:ring-primary focus:outline-hidden pr-10"
+                disabled={isPending}
+                className="w-full px-4 py-2 rounded-lg border bg-background focus:ring-2 focus:ring-primary focus:outline-hidden pr-10 disabled:opacity-50"
                 placeholder="••••••••"
               />
               <button
@@ -63,8 +68,15 @@ export default function LoginForm() {
             </div>
           )}
 
-          <Button type="submit" className="w-full font-bold">
-            Masuk
+          <Button type="submit" className="w-full font-bold" disabled={isPending}>
+            {isPending ? (
+              <>
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                Masuk...
+              </>
+            ) : (
+              'Masuk'
+            )}
           </Button>
         </form>
 

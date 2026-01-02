@@ -1,23 +1,26 @@
 'use client'
 
 import { signup } from '../auth/actions'
-import { useState } from 'react'
+import { useState, useTransition } from 'react'
 import { Button } from '@/components/ui/button'
 import Link from 'next/link'
 import { TermsModal, PrivacyModal } from '@/components/modals/policies'
-import { Eye, EyeOff } from 'lucide-react'
+import { Eye, EyeOff, Loader2 } from 'lucide-react'
 
 export default function SignupForm() {
   const [error, setError] = useState<string | null>(null)
   const [showTerms, setShowTerms] = useState(false)
   const [showPrivacy, setShowPrivacy] = useState(false)
   const [showPassword, setShowPassword] = useState(false)
+  const [isPending, startTransition] = useTransition()
   
   async function handleSubmit(formData: FormData) {
-    const res = await signup(formData)
-    if (res?.error) {
-      setError(res.error)
-    }
+    startTransition(async () => {
+        const res = await signup(formData)
+        if (res?.error) {
+            setError(res.error)
+        }
+    })
   }
 
   return (
@@ -38,7 +41,8 @@ export default function SignupForm() {
               name="name" 
               type="text" 
               required 
-              className="w-full px-4 py-2 rounded-lg border bg-background focus:ring-2 focus:ring-primary focus:outline-hidden"
+              disabled={isPending}
+              className="w-full px-4 py-2 rounded-lg border bg-background focus:ring-2 focus:ring-primary focus:outline-hidden disabled:opacity-50"
               placeholder="John Doe"
             />
           </div>
@@ -50,7 +54,8 @@ export default function SignupForm() {
              <input 
                name="phone" 
                type="tel" 
-               className="w-full px-4 py-2 rounded-lg border bg-background focus:ring-2 focus:ring-primary focus:outline-hidden"
+               disabled={isPending}
+               className="w-full px-4 py-2 rounded-lg border bg-background focus:ring-2 focus:ring-primary focus:outline-hidden disabled:opacity-50"
                placeholder="08123456789"
              />
            </div>
@@ -61,7 +66,8 @@ export default function SignupForm() {
               name="email" 
               type="email" 
               required 
-              className="w-full px-4 py-2 rounded-lg border bg-background focus:ring-2 focus:ring-primary focus:outline-hidden"
+              disabled={isPending}
+              className="w-full px-4 py-2 rounded-lg border bg-background focus:ring-2 focus:ring-primary focus:outline-hidden disabled:opacity-50"
               placeholder="you@example.com"
             />
           </div>
@@ -73,7 +79,8 @@ export default function SignupForm() {
                 name="password" 
                 type={showPassword ? "text" : "password"} 
                 required 
-                className="w-full px-4 py-2 rounded-lg border bg-background focus:ring-2 focus:ring-primary focus:outline-hidden pr-10"
+                disabled={isPending}
+                className="w-full px-4 py-2 rounded-lg border bg-background focus:ring-2 focus:ring-primary focus:outline-hidden pr-10 disabled:opacity-50"
                 placeholder="••••••••"
                 minLength={6}
               />
@@ -107,8 +114,15 @@ export default function SignupForm() {
             </div>
           )}
 
-          <Button type="submit" className="w-full font-bold">
-            Daftar
+          <Button type="submit" className="w-full font-bold" disabled={isPending}>
+            {isPending ? (
+              <>
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                Daftar...
+              </>
+            ) : (
+              'Daftar'
+            )}
           </Button>
         </form>
 

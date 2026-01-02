@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useRef, useEffect } from 'react'
+import { useState, useRef, useEffect, useTransition } from 'react'
 import { User, LogOut, Settings, ChevronDown } from 'lucide-react'
 import Link from 'next/link'
 import { motion, AnimatePresence } from 'framer-motion'
@@ -13,16 +13,14 @@ interface UserMenuProps {
 
 export default function UserMenu({ user }: UserMenuProps) {
   const [isOpen, setIsOpen] = useState(false)
+  const [isPending, startTransition] = useTransition()
   const menuRef = useRef<HTMLDivElement>(null)
 
   // Close invalid clicks
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
       if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
-        console.log("Clicked outside, closing menu. Target:", event.target)
         setIsOpen(false)
-      } else {
-         console.log("Clicked inside menu")
       }
     }
     document.addEventListener("mousedown", handleClickOutside)
@@ -71,15 +69,20 @@ export default function UserMenu({ user }: UserMenuProps) {
               </Link>
               
               <button 
-                onMouseDown={() => console.log('Logout MouseDown')}
+                disabled={isPending}
                 onClick={() => {
-                  console.log('Logout clicked')
-                  logout()
+                  startTransition(async () => {
+                    await logout()
+                  })
                 }}
-                className="flex items-center gap-3 w-full px-3 py-2.5 text-sm cursor-pointer rounded-xl hover:bg-red-50 text-muted-foreground hover:text-red-500 transition-colors"
+                className="flex items-center gap-3 w-full px-3 py-2.5 text-sm cursor-pointer rounded-xl hover:bg-red-50 text-muted-foreground hover:text-red-500 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                <LogOut size={16} />
-                Keluar
+                {isPending ? (
+                    <div className="w-4 h-4 border-2 border-muted-foreground border-t-transparent rounded-full animate-spin" />
+                ) : (
+                    <LogOut size={16} />
+                )}
+                {isPending ? 'Keluar...' : 'Keluar'}
               </button>
             </div>
           </motion.div>
