@@ -128,24 +128,7 @@ export default function AdminOrders() {
       })
   }
 
-  async function handleTestNotification() {
-      setIsUpdating(true)
-      try {
-          const res = await fetch('/api/admin/test-notification', { method: 'POST' })
-          const data = await res.json()
-          
-          if (res.ok) {
-              alert(`Notification sent! Success: ${data.sent_count}, Failed: ${data.failed_count}`)
-          } else {
-              alert(`Failed: ${data.message || data.error}`)
-          }
-      } catch (error) {
-          console.error("Test notification error", error)
-          alert("An error occurred while sending test notification")
-      } finally {
-          setIsUpdating(false)
-      }
-  }
+
 
   async function handleConfirmToggleStore() {
         const newStatus = !storeStatus
@@ -232,19 +215,6 @@ export default function AdminOrders() {
                 >
                     <Bell size={12} />
                     Enable Notif
-                </Button>
-            )}
-
-            {notificationPermission === 'granted' && (
-                <Button 
-                    variant="outline" 
-                    size="sm" 
-                    className="h-7 text-xs gap-1"
-                    onClick={handleTestNotification}
-                    disabled={isUpdating}
-                >
-                    <Bell size={12} />
-                    Test Notif
                 </Button>
             )}
           </div>
