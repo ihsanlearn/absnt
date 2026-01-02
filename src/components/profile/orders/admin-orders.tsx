@@ -220,7 +220,7 @@ export default function AdminOrders() {
                 disabled={isUpdating}
             >
                 <Bell size={12} />
-                Test Notification
+                Notification Test
             </Button>
           </div>
           <div className="flex gap-2 p-1 bg-muted rounded-lg overflow-x-auto max-w-full">
